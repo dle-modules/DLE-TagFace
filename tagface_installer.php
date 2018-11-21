@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Установка модуля TagFace</title>
+        <title>РЈСЃС‚Р°РЅРѕРІРєР° РјРѕРґСѓР»СЏ TagFace</title>
         <link rel="stylesheet" type="text/css" href="http://store.alaev.info/style.css" />
         <style type="text/css">
             #header {width: 100%; text-align: center;}
@@ -37,25 +37,25 @@
 
     function module_installer()
     {
-        // Стандартный текст
-        $output = '<h2>Добро пожаловать в установщик модуля TagFace!</h2>';
+        // РЎС‚Р°РЅРґР°СЂС‚РЅС‹Р№ С‚РµРєСЃС‚
+        $output = '<h2>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ РІ СѓСЃС‚Р°РЅРѕРІС‰РёРє РјРѕРґСѓР»СЏ TagFace!</h2>';
         $output .= '<img class="module_image" src="/engine/skins/images/tagface.png" />';
-        $output .= '<p><strong>Внимание!</strong> После установки модуля <strong>обязательно</strong> удалите файл <strong>tagface_installer.php</strong> с Вашего сервера!</p>';
+        $output .= '<p><strong>Р’РЅРёРјР°РЅРёРµ!</strong> РџРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё РјРѕРґСѓР»СЏ <strong>РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ</strong> СѓРґР°Р»РёС‚Рµ С„Р°Р№Р» <strong>tagface_installer.php</strong> СЃ Р’Р°С€РµРіРѕ СЃРµСЂРІРµСЂР°!</p>';
 
-        // Если через $_POST передаётся параметр tagface_install, производим инсталляцию, согласно параметрам
+        // Р•СЃР»Рё С‡РµСЂРµР· $_POST РїРµСЂРµРґР°С‘С‚СЃСЏ РїР°СЂР°РјРµС‚СЂ tagface_install, РїСЂРѕРёР·РІРѕРґРёРј РёРЅСЃС‚Р°Р»Р»СЏС†РёСЋ, СЃРѕРіР»Р°СЃРЅРѕ РїР°СЂР°РјРµС‚СЂР°Рј
         if(!empty($_POST['tagface_install']))
         {
-            // Подключаем config
+            // РџРѕРґРєР»СЋС‡Р°РµРј config
             include_once ('engine/data/config.php');
 
-            // Подключаем DLE API
+            // РџРѕРґРєР»СЋС‡Р°РµРј DLE API
             include ('engine/api/api.class.php');
 
-            // Удаление таблицы с таким же названием (если существует)
+            // РЈРґР°Р»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ СЃ С‚Р°РєРёРј Р¶Рµ РЅР°Р·РІР°РЅРёРµРј (РµСЃР»Рё СЃСѓС‰РµСЃС‚РІСѓРµС‚)
             $query = "DROP TABLE IF EXISTS `".PREFIX."_tag_face`;";
             $dle_api->db->query($query);
 
-            // Cоздание таблицы для модуля
+            // CРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ РґР»СЏ РјРѕРґСѓР»СЏ
             $query = "CREATE TABLE `".PREFIX."_tag_face` (
                           `tag_id` varchar(255) NOT NULL,
                           `name` varchar(255) NOT NULL,
@@ -71,32 +71,32 @@
                         ) DEFAULT CHARSET=cp1251;";
             $dle_api->db->query($query);
 
-            // Устанавливаем модуль в админку
-            $dle_api->install_admin_module('tagface', 'TagFace - SEO оптимизация тегов', 'Модуль позволяет прикрепить к тегам описание и заголовок, а так же регулировать их вывод на разных страницах', 'tagface.png');
+            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјРѕРґСѓР»СЊ РІ Р°РґРјРёРЅРєСѓ
+            $dle_api->install_admin_module('tagface', 'TagFace - SEO РѕРїС‚РёРјРёР·Р°С†РёСЏ С‚РµРіРѕРІ', 'РњРѕРґСѓР»СЊ РїРѕР·РІРѕР»СЏРµС‚ РїСЂРёРєСЂРµРїРёС‚СЊ Рє С‚РµРіР°Рј РѕРїРёСЃР°РЅРёРµ Рё Р·Р°РіРѕР»РѕРІРѕРє, Р° С‚Р°Рє Р¶Рµ СЂРµРіСѓР»РёСЂРѕРІР°С‚СЊ РёС… РІС‹РІРѕРґ РЅР° СЂР°Р·РЅС‹С… СЃС‚СЂР°РЅРёС†Р°С…', 'tagface.png');
 
-            // Вывод
+            // Р’С‹РІРѕРґ
             $output .= '<p>';
-            $output .= 'Модуль успешно установлен! Спасибо за Ваш выбор! Приятной работы!';
+            $output .= 'РњРѕРґСѓР»СЊ СѓСЃРїРµС€РЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅ! РЎРїР°СЃРёР±Рѕ Р·Р° Р’Р°С€ РІС‹Р±РѕСЂ! РџСЂРёСЏС‚РЅРѕР№ СЂР°Р±РѕС‚С‹!';
             $output .= '</p>';
         }
 
-        // Если через $_POST ничего не передаётся, выводим форму для установки модуля
+        // Р•СЃР»Рё С‡РµСЂРµР· $_POST РЅРёС‡РµРіРѕ РЅРµ РїРµСЂРµРґР°С‘С‚СЃСЏ, РІС‹РІРѕРґРёРј С„РѕСЂРјСѓ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё РјРѕРґСѓР»СЏ
         else
         {
-            // Вывод
+            // Р’С‹РІРѕРґ
             $output .= '<p>';
             $output .= '<form method="POST" action="tagface_installer.php">';
             $output .= '<input type="hidden" name="tagface_install" value="1" />';
-            $output .= '<input type="submit" value="Установить модуль" />';
+            $output .= '<input type="submit" value="РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РјРѕРґСѓР»СЊ" />';
             $output .= '</form>';
             $output .= '</p>';
         }
         
         $output .= '<p>';
-        $output .= '<a href="http://alaev.info/blog/post/3857?from=TagFaceInstaller">разработка и поддержка модуля</a>';
+        $output .= '<a href="http://alaev.info/blog/post/3857?from=TagFaceInstaller">СЂР°Р·СЂР°Р±РѕС‚РєР° Рё РїРѕРґРґРµСЂР¶РєР° РјРѕРґСѓР»СЏ</a>';
         $output .= '</p>';
 
-        // Функция возвращает то, что должно быть выведено
+        // Р¤СѓРЅРєС†РёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚ С‚Рѕ, С‡С‚Рѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІС‹РІРµРґРµРЅРѕ
         return $output;
     }
 

@@ -2,31 +2,31 @@
 
 /*
 =============================================================================
- Файл: tagface.php (backend) версия 1.1.1
+ Р¤Р°Р№Р»: tagface.php (backend) РІРµСЂСЃРёСЏ 1.1.1
 -----------------------------------------------------------------------------
- Автор: Фомин Александр Алексеевич, mail@mithrandir.ru
+ РђРІС‚РѕСЂ: Р¤РѕРјРёРЅ РђР»РµРєСЃР°РЅРґСЂ РђР»РµРєСЃРµРµРІРёС‡, mail@mithrandir.ru
 -----------------------------------------------------------------------------
- Назначение: настройка SEO для тегов
+ РќР°Р·РЅР°С‡РµРЅРёРµ: РЅР°СЃС‚СЂРѕР№РєР° SEO РґР»СЏ С‚РµРіРѕРІ
 =============================================================================
 */
 
-    // Антихакер
+    // РђРЅС‚РёС…Р°РєРµСЂ
     if( !defined( 'DATALIFEENGINE' ) OR !defined( 'LOGGED_IN' ) ) {
             die( "Hacking attempt!" );
     }
 
     /*
-     * Класс настройки SEO для тегов
+     * РљР»Р°СЃСЃ РЅР°СЃС‚СЂРѕР№РєРё SEO РґР»СЏ С‚РµРіРѕРІ
      */
     class TagFaceAdmin
     {
         /*
-         * Конструктор класса TagFaceAdmin - задаёт значение свойства dle_api и editor
-         * @param $dle_api - объект класса DLE_API
+         * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° TagFaceAdmin - Р·Р°РґР°С‘С‚ Р·РЅР°С‡РµРЅРёРµ СЃРІРѕР№СЃС‚РІР° dle_api Рё editor
+         * @param $dle_api - РѕР±СЉРµРєС‚ РєР»Р°СЃСЃР° DLE_API
          */
         public function __construct()
         {
-            // Подключаем DLE_API
+            // РџРѕРґРєР»СЋС‡Р°РµРј DLE_API
             global $db, $config;
             include ('engine/api/api.class.php');
             $this->dle_api = $dle_api;
@@ -34,37 +34,37 @@
 
 
         /*
-         * Главный метод класса TagFaceAdmin - в зависимости от запроса, вызывает те или иные действия
+         * Р“Р»Р°РІРЅС‹Р№ РјРµС‚РѕРґ РєР»Р°СЃСЃР° TagFaceAdmin - РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ Р·Р°РїСЂРѕСЃР°, РІС‹Р·С‹РІР°РµС‚ С‚Рµ РёР»Рё РёРЅС‹Рµ РґРµР№СЃС‚РІРёСЏ
          */
         public function run()
         {
-            // Ловим параметр action из запроса; по умолчанию action=list (список позиций)
+            // Р›РѕРІРёРј РїР°СЂР°РјРµС‚СЂ action РёР· Р·Р°РїСЂРѕСЃР°; РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ action=list (СЃРїРёСЃРѕРє РїРѕР·РёС†РёР№)
             $action = !empty($_REQUEST['action'])?$_REQUEST['action']:'list';
 
-            // В зависимости от параметра action, выполняем те или иные действия
+            // Р’ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РїР°СЂР°РјРµС‚СЂР° action, РІС‹РїРѕР»РЅСЏРµРј С‚Рµ РёР»Рё РёРЅС‹Рµ РґРµР№СЃС‚РІРёСЏ
             switch($action)
             {
-                // Просмотр списка позиций
+                // РџСЂРѕСЃРјРѕС‚СЂ СЃРїРёСЃРєР° РїРѕР·РёС†РёР№
                 case 'list':
                     $output = $this->actionList();
-                    $headerText = 'Список тегов';
+                    $headerText = 'РЎРїРёСЃРѕРє С‚РµРіРѕРІ';
                     break;
 
-                // Форма редактирования одной позици из списка
+                // Р¤РѕСЂРјР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РѕРґРЅРѕР№ РїРѕР·РёС†Рё РёР· СЃРїРёСЃРєР°
                 case 'form':
                     $output = $this->actionForm();
-                    $headerText = '<a href="?mod=tagface"><< Вернуться к списку тегов</a>';
+                    $headerText = '<a href="?mod=tagface"><< Р’РµСЂРЅСѓС‚СЊСЃСЏ Рє СЃРїРёСЃРєСѓ С‚РµРіРѕРІ</a>';
                     break;
 
-                // Созранение позиции
+                // РЎРѕР·СЂР°РЅРµРЅРёРµ РїРѕР·РёС†РёРё
                 case 'save':
                     $output = $this->actionSave();
-                    $headerText = 'Сохранение информации';
+                    $headerText = 'РЎРѕС…СЂР°РЅРµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё';
                     break;
 
-                // Ошибка - не существующий action
+                // РћС€РёР±РєР° - РЅРµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёР№ action
                 default:
-                    $headerText = 'Ошибка! Запрошено неизвестное действие!';
+                    $headerText = 'РћС€РёР±РєР°! Р—Р°РїСЂРѕС€РµРЅРѕ РЅРµРёР·РІРµСЃС‚РЅРѕРµ РґРµР№СЃС‚РІРёРµ!';
                     break;
             }
 
@@ -73,7 +73,7 @@
 
 
         /*
-         * Метод генерирует список тегов и возвращает разметку для вывода
+         * РњРµС‚РѕРґ РіРµРЅРµСЂРёСЂСѓРµС‚ СЃРїРёСЃРѕРє С‚РµРіРѕРІ Рё РІРѕР·РІСЂР°С‰Р°РµС‚ СЂР°Р·РјРµС‚РєСѓ РґР»СЏ РІС‹РІРѕРґР°
          * @return string
          */
         public function actionList()
@@ -82,8 +82,8 @@
             <table id="tagslist" class="table table-normal" width="100%">
                 <tbody>
                     <tr>
-                        <th>Тег</th>
-                        <th>Действие:</th>
+                        <th>РўРµРі</th>
+                        <th>Р”РµР№СЃС‚РІРёРµ:</th>
                     </tr>
                     <tr class="list_item">
                         <td colspan="3"><div class="hr_line"></div></td>
@@ -104,27 +104,27 @@
 
 
         /*
-         * Метод генерирует строки с тегами в системе новостей
-         * @return string таблицу всех тегов
+         * РњРµС‚РѕРґ РіРµРЅРµСЂРёСЂСѓРµС‚ СЃС‚СЂРѕРєРё СЃ С‚РµРіР°РјРё РІ СЃРёСЃС‚РµРјРµ РЅРѕРІРѕСЃС‚РµР№
+         * @return string С‚Р°Р±Р»РёС†Сѓ РІСЃРµС… С‚РµРіРѕРІ
          */
         public function createTagsTable()
         {
-            // Получаем список тегов
+            // РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє С‚РµРіРѕРІ
             $tags = $this->dle_api->load_table (PREFIX."_tags", 'tag', '1 GROUP BY tag', true, 0, false, 'tag', 'ASC');
 
-            // В переменную $tagsTable будем складывать строки в таблицу тегов для вывода
+            // Р’ РїРµСЂРµРјРµРЅРЅСѓСЋ $tagsTable Р±СѓРґРµРј СЃРєР»Р°РґС‹РІР°С‚СЊ СЃС‚СЂРѕРєРё РІ С‚Р°Р±Р»РёС†Сѓ С‚РµРіРѕРІ РґР»СЏ РІС‹РІРѕРґР°
             $tagsTable = '';
 
-            // Если что-то найдено, перебираем все найденные теги
+            // Р•СЃР»Рё С‡С‚Рѕ-С‚Рѕ РЅР°Р№РґРµРЅРѕ, РїРµСЂРµР±РёСЂР°РµРј РІСЃРµ РЅР°Р№РґРµРЅРЅС‹Рµ С‚РµРіРё
             if($tags)
             {
                 foreach($tags as $tag)
                 {
-                    // Добавляем в таблицу текущий тег
+                    // Р”РѕР±Р°РІР»СЏРµРј РІ С‚Р°Р±Р»РёС†Сѓ С‚РµРєСѓС‰РёР№ С‚РµРі
                     $tagsTable .= '
                     <tr class="list_item">
                         <td height="20">&nbsp;<a href="?mod=tagface&action=form&tag_id='.urlencode($tag['tag']).'">'.$tag['tag'].'</a></td>
-                        <td height="20">&nbsp;[<a href="?mod=tagface&action=form&tag_id='.urlencode($tag['tag']).'">редактировать</a>]</td>
+                        <td height="20">&nbsp;[<a href="?mod=tagface&action=form&tag_id='.urlencode($tag['tag']).'">СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ</a>]</td>
                     </tr>';
                 }
             }
@@ -135,25 +135,25 @@
 
 
         /*
-         * Метод генерирует форму редактирования информаци
+         * РњРµС‚РѕРґ РіРµРЅРµСЂРёСЂСѓРµС‚ С„РѕСЂРјСѓ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РёРЅС„РѕСЂРјР°С†Рё
          * @return string
          */
         public function actionForm()
         {
-            // Подхватываем id тега из запроса
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј id С‚РµРіР° РёР· Р·Р°РїСЂРѕСЃР°
             $tag_id = urldecode($_REQUEST['tag_id']);
             
-            // Ищем соответствующую запись в таблице tag_face
+            // РС‰РµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰СѓСЋ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Рµ tag_face
             $tagFace = $this->dle_api->load_table (PREFIX."_tag_face", '*', 'tag_id = "'.$tag_id.'"', false);
 
-            // Подхватываем глобальные переменные
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
             global $lang, $config, $user_group, $member_id, $dle_login_hash;
             
-            // Подключаем парсер
+            // РџРѕРґРєР»СЋС‡Р°РµРј РїР°СЂСЃРµСЂ
             include_once ENGINE_DIR . '/classes/parse.class.php';
             $parse = new ParseFilter( Array (), Array (), 1, 1 );
 
-            // Подключаем редактор wysiwyg
+            // РџРѕРґРєР»СЋС‡Р°РµРј СЂРµРґР°РєС‚РѕСЂ wysiwyg
             if($this->dle_api->dle_config['allow_admin_wysiwyg'] && ($this->dle_api->dle_config['allow_admin_wysiwyg'] != "no") )
             {
                 $tagFace['description'] = $parse->decodeBBCodes($tagFace['description'], true, $this->dle_api->dle_config['allow_admin_wysiwyg']);
@@ -170,7 +170,7 @@
                 $editor_description_pages = ob_get_clean();
             }
 
-            // Подключаем редактор bbcode
+            // РџРѕРґРєР»СЋС‡Р°РµРј СЂРµРґР°РєС‚РѕСЂ bbcode
             else
             {
                 $tagFace['description'] = $parse->decodeBBCodes($tagFace['description'], false);
@@ -180,7 +180,7 @@
                 include (ENGINE_DIR . '/inc/include/inserttag.php');
 		$editor_description = '
                 <div class="form-group">
-                    <label class="control-label col-xs-2">Описание тега:</label>
+                    <label class="control-label col-xs-2">РћРїРёСЃР°РЅРёРµ С‚РµРіР°:</label>
                     <div class="col-xs-10">
 						'.$bb_code.'<textarea class="bk" style="width:100%;max-width:950px;height:300px;" name="description" id="description"  onclick=setFieldName(this.name)>'.$tagFace['description'].'</textarea><script type=text/javascript>var selField  = "description";</script>
 					</div>
@@ -188,7 +188,7 @@
 
 		$editor_description_pages = '
                 <div id="description_pages_line" class="form-group">
-                    <label class="control-label col-xs-2">Описание для остальных страниц:</label>
+                    <label class="control-label col-xs-2">РћРїРёСЃР°РЅРёРµ РґР»СЏ РѕСЃС‚Р°Р»СЊРЅС‹С… СЃС‚СЂР°РЅРёС†:</label>
                     <div class="col-xs-10">
 						'.$bb_code.'<textarea class="bk" style="width:100%;max-width:950px;height:300px;" name="description_pages" id="description_pages"  onclick=setFieldName(this.name)>'.$tagFace['description_pages'].'</textarea><script type=text/javascript>var selField  = "description_pages";</script>
 					</div>
@@ -199,57 +199,57 @@
             <form method="POST" action="?mod=tagface&action=save" class="form-horizontal">
                 <div class="row box-section">
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Где активировать модуль:</label>
+                            <label class="control-label col-xs-2">Р“РґРµ Р°РєС‚РёРІРёСЂРѕРІР°С‚СЊ РјРѕРґСѓР»СЊ:</label>
                             <div class="col-xs-3">
-                                <input id="module_placement_nowhere" type="radio" name="module_placement" value="nowhere"'.(($tagFace['module_placement'] == 'nowhere')?' checked':'').'> <label for="module_placement_nowhere">нигде</label><br />
-                                <input id="module_placement_first_page" type="radio" name="module_placement" value="first_page"'.(($tagFace['module_placement'] == 'first_page')?' checked':'').'> <label for="module_placement_first_page">на первой странице</label><br />
-                                <input id="module_placement_all_pages" type="radio" name="module_placement" value="all_pages"'.(($tagFace['module_placement'] == 'all_pages')?' checked':'').'> <label for="module_placement_all_pages">на всех страницах</label>
+                                <input id="module_placement_nowhere" type="radio" name="module_placement" value="nowhere"'.(($tagFace['module_placement'] == 'nowhere')?' checked':'').'> <label for="module_placement_nowhere">РЅРёРіРґРµ</label><br />
+                                <input id="module_placement_first_page" type="radio" name="module_placement" value="first_page"'.(($tagFace['module_placement'] == 'first_page')?' checked':'').'> <label for="module_placement_first_page">РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</label><br />
+                                <input id="module_placement_all_pages" type="radio" name="module_placement" value="all_pages"'.(($tagFace['module_placement'] == 'all_pages')?' checked':'').'> <label for="module_placement_all_pages">РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</label>
 							</div>
 							<div class="col-xs-6 note large">
-                                Данная опция позволяет скрыть на страницах списка новостей по даному тегу не только название и описание, но и все остальное содержимое tpl-шаблона:<br />
-								<strong>нигде</strong> - Деактивация модуля в рамках списка новостей по даному тегу.<br />
-								<strong>на первой странице</strong> - Модуль будет активирован на первой странице списка новостей по данному тегу.<br />
-								<strong>на всех страницах</strong> - Модуль будет отображаться на всех страницах списка новостей по данному тегу.
+                                Р”Р°РЅРЅР°СЏ РѕРїС†РёСЏ РїРѕР·РІРѕР»СЏРµС‚ СЃРєСЂС‹С‚СЊ РЅР° СЃС‚СЂР°РЅРёС†Р°С… СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРѕРјСѓ С‚РµРіСѓ РЅРµ С‚РѕР»СЊРєРѕ РЅР°Р·РІР°РЅРёРµ Рё РѕРїРёСЃР°РЅРёРµ, РЅРѕ Рё РІСЃРµ РѕСЃС‚Р°Р»СЊРЅРѕРµ СЃРѕРґРµСЂР¶РёРјРѕРµ tpl-С€Р°Р±Р»РѕРЅР°:<br />
+								<strong>РЅРёРіРґРµ</strong> - Р”РµР°РєС‚РёРІР°С†РёСЏ РјРѕРґСѓР»СЏ РІ СЂР°РјРєР°С… СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРѕРјСѓ С‚РµРіСѓ.<br />
+								<strong>РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</strong> - РњРѕРґСѓР»СЊ Р±СѓРґРµС‚ Р°РєС‚РёРІРёСЂРѕРІР°РЅ РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРЅРѕРјСѓ С‚РµРіСѓ.<br />
+								<strong>РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</strong> - РњРѕРґСѓР»СЊ Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С… СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРЅРѕРјСѓ С‚РµРіСѓ.
                             </div>
                         </div>
 
 						<hr />
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Заголовок тега:</label>
+                            <label class="control-label col-xs-2">Р—Р°РіРѕР»РѕРІРѕРє С‚РµРіР°:</label>
                             <div class="col-xs-10">
 								<input type="text" value="'.$tagFace['name'].'" class="edit bk" style="width:98%;" size="25" name="name">
 							</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Отображать заголовок:</label>
+                            <label class="control-label col-xs-2">РћС‚РѕР±СЂР°Р¶Р°С‚СЊ Р·Р°РіРѕР»РѕРІРѕРє:</label>
                             <div class="col-xs-3">
-                                <input id="show_name_show" type="radio" name="show_name" value="show"'.(($tagFace['show_name'] == 'show')?' checked':'').'> <label for="show_name_show">показывать</label><br />
-                                <input id="show_name_default" type="radio" name="show_name" value="default"'.(($tagFace['show_name'] == 'default')?' checked':'').'> <label for="show_name_default">по умолчанию</label><br />
-                                <input id="show_name_hide" type="radio" name="show_name" value="hide"'.(($tagFace['show_name'] == 'hide')?' checked':'').'> <label for="show_name_hide">скрывать</label>
+                                <input id="show_name_show" type="radio" name="show_name" value="show"'.(($tagFace['show_name'] == 'show')?' checked':'').'> <label for="show_name_show">РїРѕРєР°Р·С‹РІР°С‚СЊ</label><br />
+                                <input id="show_name_default" type="radio" name="show_name" value="default"'.(($tagFace['show_name'] == 'default')?' checked':'').'> <label for="show_name_default">РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</label><br />
+                                <input id="show_name_hide" type="radio" name="show_name" value="hide"'.(($tagFace['show_name'] == 'hide')?' checked':'').'> <label for="show_name_hide">СЃРєСЂС‹РІР°С‚СЊ</label>
                             </div>
 							<div class="col-xs-6 note large">
-                                <strong>показывать</strong> - Активирует заголовок, он будет отображаться в соответствии с заполненным полем выше.<br />
-								<strong>по умолчанию</strong> - Использовать в качестве заголовка сам тег.<br />
-								<strong>скрывать</strong> - Деактивирует заголовок, т.е. на странице он отображаться не будет.
+                                <strong>РїРѕРєР°Р·С‹РІР°С‚СЊ</strong> - РђРєС‚РёРІРёСЂСѓРµС‚ Р·Р°РіРѕР»РѕРІРѕРє, РѕРЅ Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ Р·Р°РїРѕР»РЅРµРЅРЅС‹Рј РїРѕР»РµРј РІС‹С€Рµ.<br />
+								<strong>РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</strong> - РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РєР°С‡РµСЃС‚РІРµ Р·Р°РіРѕР»РѕРІРєР° СЃР°Рј С‚РµРі.<br />
+								<strong>СЃРєСЂС‹РІР°С‚СЊ</strong> - Р”РµР°РєС‚РёРІРёСЂСѓРµС‚ Р·Р°РіРѕР»РѕРІРѕРє, С‚.Рµ. РЅР° СЃС‚СЂР°РЅРёС†Рµ РѕРЅ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅРµ Р±СѓРґРµС‚.
 							</div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Где отображать заголовок:</label>
+                            <label class="control-label col-xs-2">Р“РґРµ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ Р·Р°РіРѕР»РѕРІРѕРє:</label>
                             <div class="col-xs-3">
-                                <input id="name_placement_first_page" type="radio" name="name_placement" value="first_page"'.(($tagFace['name_placement'] == 'first_page')?' checked':'').'> <label for="name_placement_first_page">на первой странице</label><br />
-                                <input id="name_placement_all_pages" type="radio" name="name_placement" value="all_pages"'.(($tagFace['name_placement'] == 'all_pages')?' checked':'').'> <label for="name_placement_all_pages">на всех страницах</label>
+                                <input id="name_placement_first_page" type="radio" name="name_placement" value="first_page"'.(($tagFace['name_placement'] == 'first_page')?' checked':'').'> <label for="name_placement_first_page">РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</label><br />
+                                <input id="name_placement_all_pages" type="radio" name="name_placement" value="all_pages"'.(($tagFace['name_placement'] == 'all_pages')?' checked':'').'> <label for="name_placement_all_pages">РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</label>
                             </div>
 							<div class="col-xs-6 note large">
-                                <strong>на первой странице</strong> - Заголовок будет отображаться только на главной странице списка новостей по даному тегу.<br />
-								<strong>на всех страницах</strong> - Сквозной заголовок, т.е. будет отображаться на всех страницах списка новостей по даному тегу.
+                                <strong>РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</strong> - Р—Р°РіРѕР»РѕРІРѕРє Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРѕРјСѓ С‚РµРіСѓ.<br />
+								<strong>РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</strong> - РЎРєРІРѕР·РЅРѕР№ Р·Р°РіРѕР»РѕРІРѕРє, С‚.Рµ. Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С… СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРѕРјСѓ С‚РµРіСѓ.
                             </div>
                         </div>
                         <div id="name_pages_separator"></div>
                         <div id="name_pages_line" class="form-group">
-                            <label class="control-label col-xs-2">Заголовок для остальных страниц:</label>
+                            <label class="control-label col-xs-2">Р—Р°РіРѕР»РѕРІРѕРє РґР»СЏ РѕСЃС‚Р°Р»СЊРЅС‹С… СЃС‚СЂР°РЅРёС†:</label>
                             <div class="col-xs-10">
 								<input type="text" value="'.$tagFace['name_pages'].'" class="edit bk" style="width:98%;" size="25" name="name_pages">
 							</div>
@@ -258,28 +258,28 @@
 						<hr />
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Отображать описание:</label>
+                            <label class="control-label col-xs-2">РћС‚РѕР±СЂР°Р¶Р°С‚СЊ РѕРїРёСЃР°РЅРёРµ:</label>
                             <div class="col-xs-3">
-                                <input id="show_description_show" type="radio" name="show_description" value="show"'.(($tagFace['show_description'] == 'show')?' checked':'').'> <label for="show_description_show">показывать</label><br />
-                                <input id="show_description_hide" type="radio" name="show_description" value="hide"'.(($tagFace['show_description'] == 'hide')?' checked':'').'> <label for="show_description_hide">скрывать</label>
+                                <input id="show_description_show" type="radio" name="show_description" value="show"'.(($tagFace['show_description'] == 'show')?' checked':'').'> <label for="show_description_show">РїРѕРєР°Р·С‹РІР°С‚СЊ</label><br />
+                                <input id="show_description_hide" type="radio" name="show_description" value="hide"'.(($tagFace['show_description'] == 'hide')?' checked':'').'> <label for="show_description_hide">СЃРєСЂС‹РІР°С‚СЊ</label>
                             </div>
 							<div class="col-xs-6 note large">
-                                <strong>показывать</strong> - Активирует описание, оно будет браться из текстового поля выше.<br />
-								<strong>скрывать</strong> - Деактивирует описание, т.е. на странице оно отображаться не будет.
+                                <strong>РїРѕРєР°Р·С‹РІР°С‚СЊ</strong> - РђРєС‚РёРІРёСЂСѓРµС‚ РѕРїРёСЃР°РЅРёРµ, РѕРЅРѕ Р±СѓРґРµС‚ Р±СЂР°С‚СЊСЃСЏ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ РІС‹С€Рµ.<br />
+								<strong>СЃРєСЂС‹РІР°С‚СЊ</strong> - Р”РµР°РєС‚РёРІРёСЂСѓРµС‚ РѕРїРёСЃР°РЅРёРµ, С‚.Рµ. РЅР° СЃС‚СЂР°РЅРёС†Рµ РѕРЅРѕ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅРµ Р±СѓРґРµС‚.
                             </div>
                         </div>
 
                         '.$editor_description.'
 
                         <div class="form-group">
-                            <label class="control-label col-xs-2">Где отображать описание:</label>
+                            <label class="control-label col-xs-2">Р“РґРµ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ РѕРїРёСЃР°РЅРёРµ:</label>
                             <div class="col-xs-3">
-                                <input id="description_placement_first_page" type="radio" name="description_placement" value="first_page"'.(($tagFace['description_placement'] == 'first_page')?' checked':'').'> <label for="description_placement_first_page">на первой странице</label><br />
-                                <input id="description_placement_all_pages" type="radio" name="description_placement" value="all_pages"'.(($tagFace['description_placement'] == 'all_pages')?' checked':'').'> <label for="description_placement_all_pages">на всех страницах</label>
+                                <input id="description_placement_first_page" type="radio" name="description_placement" value="first_page"'.(($tagFace['description_placement'] == 'first_page')?' checked':'').'> <label for="description_placement_first_page">РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</label><br />
+                                <input id="description_placement_all_pages" type="radio" name="description_placement" value="all_pages"'.(($tagFace['description_placement'] == 'all_pages')?' checked':'').'> <label for="description_placement_all_pages">РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</label>
                             </div>
 							<div class="col-xs-6 note large">
-                                <strong>на первой странице</strong> - Описание будет отображаться только на главной странице списка новостей по даному тегу.<br />
-								<strong>на всех страницах</strong> - Сквозное описание, т.е. будет отображаться на всех страницах списка новостей по даному тегу.
+                                <strong>РЅР° РїРµСЂРІРѕР№ СЃС‚СЂР°РЅРёС†Рµ</strong> - РћРїРёСЃР°РЅРёРµ Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РЅР° РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРѕРјСѓ С‚РµРіСѓ.<br />
+								<strong>РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С…</strong> - РЎРєРІРѕР·РЅРѕРµ РѕРїРёСЃР°РЅРёРµ, С‚.Рµ. Р±СѓРґРµС‚ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊСЃСЏ РЅР° РІСЃРµС… СЃС‚СЂР°РЅРёС†Р°С… СЃРїРёСЃРєР° РЅРѕРІРѕСЃС‚РµР№ РїРѕ РґР°РЅРѕРјСѓ С‚РµРіСѓ.
                             </div>
                         </div>
 
@@ -287,7 +287,7 @@
                         '.$editor_description_pages.'
                 </div>
 
-				<div style="text-align:center;padding:15px;"><input type="submit" class="btn btn-lg btn-green" value="Сохранить"></div>
+				<div style="text-align:center;padding:15px;"><input type="submit" class="btn btn-lg btn-green" value="РЎРѕС…СЂР°РЅРёС‚СЊ"></div>
 
                 <input type="hidden" name="user_hash" value="'.$dle_login_hash.'" />
                 <input type="hidden" name="tag_id" value="'.$tag_id.'" />
@@ -328,31 +328,31 @@
 
 
         /*
-         * Метод сохраняет SEO - информацию о теге в таблицу tag_face
+         * РњРµС‚РѕРґ СЃРѕС…СЂР°РЅСЏРµС‚ SEO - РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚РµРіРµ РІ С‚Р°Р±Р»РёС†Сѓ tag_face
          * @return string
          */
         public function actionSave()
         {
-            // Подхватываем глобальные переменные
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј РіР»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
             global $dle_login_hash, $user_group, $member_id;
 
-            // Проверка ключа
+            // РџСЂРѕРІРµСЂРєР° РєР»СЋС‡Р°
             if( $_REQUEST['user_hash'] == "" or $_REQUEST['user_hash'] != $dle_login_hash )
             {
                 die( "Hacking attempt! User not found" );
             }
 
-            // Проверяем наличие id тега
+            // РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ id С‚РµРіР°
             if($_POST['tag_id'] == '')
             {
-                die('Тег не найден!');
+                die('РўРµРі РЅРµ РЅР°Р№РґРµРЅ!');
             }
 
-            // Подключаем класс парсера
+            // РџРѕРґРєР»СЋС‡Р°РµРј РєР»Р°СЃСЃ РїР°СЂСЃРµСЂР°
             include_once ENGINE_DIR . '/classes/parse.class.php';
             $parse = new ParseFilter( Array (), Array (), 1, 1 );
 
-            // Подхватываем данные из формы
+            // РџРѕРґС…РІР°С‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ РёР· С„РѕСЂРјС‹
             $tag_id = $_POST['tag_id'];
             $name = !empty($_POST['name'])?$_POST['name']:'';
             $name_pages = !empty($_POST['name_pages'])?$_POST['name_pages']:'';
@@ -364,7 +364,7 @@
             $show_description = !empty($_POST['show_description'])?$_POST['show_description']:'show';
             $description_placement = !empty($_POST['description_placement'])?$_POST['description_placement']:'first_page';
             
-            // Обрабатываем данные из формы
+            // РћР±СЂР°Р±Р°С‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ РёР· С„РѕСЂРјС‹
             $tag_id = $this->dle_api->db->safesql($parse->process(trim($tag_id)));
             $name = $this->dle_api->db->safesql($parse->process(trim(($name))));
             $name_pages = $this->dle_api->db->safesql($parse->process(trim(($name_pages))));
@@ -374,7 +374,7 @@
             $show_description = $this->dle_api->db->safesql($parse->process(trim(($show_description))));
             $description_placement = $this->dle_api->db->safesql($parse->process(trim(($description_placement))));
 
-            // Обрабатываем текст описания
+            // РћР±СЂР°Р±Р°С‚С‹РІР°РµРј С‚РµРєСЃС‚ РѕРїРёСЃР°РЅРёСЏ
             if (!$user_group[$member_id['user_group']]['allow_html'] )
             {
 		$description = strip_tags($description);
@@ -399,16 +399,16 @@
                 $description_pages = $this->dle_api->db->safesql($parse->BB_Parse($description_pages, false));
             }
 
-            // Ошибка в случае, если что-то не прошло проверку
+            // РћС€РёР±РєР° РІ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё С‡С‚Рѕ-С‚Рѕ РЅРµ РїСЂРѕС€Р»Рѕ РїСЂРѕРІРµСЂРєСѓ
             if($parse->not_allowed_text)
             {
-		msg( "error", 'Ошибка при сохранении', 'Недопустимые символы', "javascript:history.go(-1)" );
+		msg( "error", 'РћС€РёР±РєР° РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё', 'РќРµРґРѕРїСѓСЃС‚РёРјС‹Рµ СЃРёРјРІРѕР»С‹', "javascript:history.go(-1)" );
             }
 
-            // Определяем, существует ли соответствующая запись в таблице tag_face
+            // РћРїСЂРµРґРµР»СЏРµРј, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰Р°СЏ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Рµ tag_face
             $tagFace = $this->dle_api->load_table (PREFIX."_tag_face", 'tag_id', 'tag_id = "'.$tag_id.'"', false);
 
-            // Если запись уже существовала, обновляем её
+            // Р•СЃР»Рё Р·Р°РїРёСЃСЊ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІРѕРІР°Р»Р°, РѕР±РЅРѕРІР»СЏРµРј РµС‘
             if(!empty($tagFace))
             {
                 $this->dle_api->db->query(
@@ -426,7 +426,7 @@
                 );
             }
 
-            // Если записи не существовало, добавляем её
+            // Р•СЃР»Рё Р·Р°РїРёСЃРё РЅРµ СЃСѓС‰РµСЃС‚РІРѕРІР°Р»Рѕ, РґРѕР±Р°РІР»СЏРµРј РµС‘
             else
             {
                 $this->dle_api->db->query(
@@ -436,20 +436,20 @@
                 );
             }
 
-            // Выводим сообщение об успешном добавлении
-            msg("info", 'Информация о теге успешно сохранена!', 'Информация о теге успешно сохранена!', '?mod=tagface');
+            // Р’С‹РІРѕРґРёРј СЃРѕРѕР±С‰РµРЅРёРµ РѕР± СѓСЃРїРµС€РЅРѕРј РґРѕР±Р°РІР»РµРЅРёРё
+            msg("info", 'РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РµРіРµ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅР°!', 'РРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РµРіРµ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅР°!', '?mod=tagface');
         }
 
 
         /*
-         * Метод выводит интерфейс в браузер
-         * @param $headerText - текст заголовка страницы
-         * @param $output - содержит отформатированный контент для вывода в браузер
+         * РњРµС‚РѕРґ РІС‹РІРѕРґРёС‚ РёРЅС‚РµСЂС„РµР№СЃ РІ Р±СЂР°СѓР·РµСЂ
+         * @param $headerText - С‚РµРєСЃС‚ Р·Р°РіРѕР»РѕРІРєР° СЃС‚СЂР°РЅРёС†С‹
+         * @param $output - СЃРѕРґРµСЂР¶РёС‚ РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅС‹Р№ РєРѕРЅС‚РµРЅС‚ РґР»СЏ РІС‹РІРѕРґР° РІ Р±СЂР°СѓР·РµСЂ
          */
         public function showOutput($headerText, $output)
         {
-            // Отображение шапки админского интерфейса
-            echoheader('TagFace', 'Модуль SEO-оптимизации тегов');
+            // РћС‚РѕР±СЂР°Р¶РµРЅРёРµ С€Р°РїРєРё Р°РґРјРёРЅСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
+            echoheader('TagFace', 'РњРѕРґСѓР»СЊ SEO-РѕРїС‚РёРјРёР·Р°С†РёРё С‚РµРіРѕРІ');
             echo '
 
 '.($config['version_id'] >= 10.2 ? '<style>.uniform, div.selector {min-width: 250px;}</style>' : '<style>
@@ -470,7 +470,7 @@ font-size: 12px;
 -o-border-radius: 0;
 border-radius: 0;
 background: whitesmoke;
-background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgi…pZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==");
+background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiвЂ¦pZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==");
 background-size: 100%;
 background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f5f5f5));
 background-image: -webkit-linear-gradient(top, #ffffff, #f5f5f5);
@@ -493,7 +493,7 @@ color: #666;
 		<div class="title">'.$headerText.'</div>
 		<ul class="box-toolbar">
 			<li class="toolbar-link">
-			<a target="_blank" href="http://alaev.info/blog/post/3857?from=TagFaceAdmin">TagFace v.1.1.1 © 2015 Блог АлаичЪ\'а - разработка и поддержка модуля</a>
+			<a target="_blank" href="http://alaev.info/blog/post/3857?from=TagFaceAdmin">TagFace v.1.1.1 В© 2015 Р‘Р»РѕРі РђР»Р°РёС‡РЄ\'Р° - СЂР°Р·СЂР°Р±РѕС‚РєР° Рё РїРѕРґРґРµСЂР¶РєР° РјРѕРґСѓР»СЏ</a>
 			</li>
 		</ul>
 	</div>
@@ -505,16 +505,16 @@ color: #666;
 
 			';
 
-            // Отображение подвала админского интерфейса
+            // РћС‚РѕР±СЂР°Р¶РµРЅРёРµ РїРѕРґРІР°Р»Р° Р°РґРјРёРЅСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
             echofooter();
         }
     }
     /*---End Of TagFaceAdmin Class---*/
 
-    // Создаём объект класса TagFaceAdmin
+    // РЎРѕР·РґР°С‘Рј РѕР±СЉРµРєС‚ РєР»Р°СЃСЃР° TagFaceAdmin
     $tagFaceAdmin = new TagFaceAdmin;
 
-    // Запускаем главный метод класса
+    // Р—Р°РїСѓСЃРєР°РµРј РіР»Р°РІРЅС‹Р№ РјРµС‚РѕРґ РєР»Р°СЃСЃР°
     $tagFaceAdmin->run();
     
 ?>
